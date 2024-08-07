@@ -1,30 +1,68 @@
-# React + TypeScript + Vite
+# オセロゲームを作ろう!!!
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## セットアップ
+1. リポジトリをクローンしてくる
+```
+git clone https://github.com/ryuryu-ymj/reversi-webapp.git
+cd reversi-webapp
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. とりあえず動かしてみる
+```
+npm install
+npm run dev
+```
+
+3. 自分の開発ブランチを切る
+```
+git branch <ブランチ名>
+git switch <ブランチ名>
+```
+ブランチ名は `dev-ハンドルネーム` とする
+
+4. コードを編集し，作業が一段落したらコミット
+```
+git add -A
+git commit -m "<コミットメッセージ>"
+```
+コミットは何回してもいい
+
+5. 変更内容をリモートにプッシュ
+```
+git push -u orign <ブランチ名>
+```
+
+6. [Githubのプロジェクトページ](https://github.com/ryuryu-ymj/reversi-webapp) でプルリクエストを立てる
+
+7. プルリクエストをマージする
+
+
+## ２回目以降の編集の流れ
+1. リモートのmainブランチをプルしてくる（ローカルのプロジェクトを最新の状態に更新する）
+```
+git switch main
+git pull
+```
+
+2. 自分の開発ブランチにマージ（他人の変更内容を反映）
+```
+git switch <ブランチ名>
+git merge main
+```
+
+3. コードを編集し，作業が一段落したらコミット
+```
+git add -A
+git commit -m "<コミットメッセージ>"
+```
+
+4. 変更内容をリモートにプッシュ
+```
+git push
+```
+２回目以降は `git push` でいい
+
+6. [Githubのプロジェクトページ](https://github.com/ryuryu-ymj/reversi-webapp) でプルリクエストを立てる
+
+7. プルリクエストをマージする
+
