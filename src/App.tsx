@@ -10,10 +10,11 @@ const color = ["Black", "White"]
  */
 function generateInitialGrid() {
   const initial: string[][] = Array.from({ length: dim }, () => Array(dim).fill(null));
-  initial[3][3] = "White";
-  initial[3][4] = "Black";
-  initial[4][3] = "Black";
-  initial[4][4] = "White";
+  const hdim = Math.floor(dim / 2);
+  initial[hdim - 1][hdim - 1] = "White";
+  initial[hdim - 1][hdim - 0] = "Black";
+  initial[hdim - 0][hdim - 1] = "Black";
+  initial[hdim - 0][hdim - 0] = "White";
   return initial;
 }
 
@@ -44,7 +45,7 @@ function possible_area(nowplayer: string, squares: string[][]) {
     for (let j = 0; j < dim; j++) {
       // 石が置かれていないすべての升目に対して配置可能場所を計算
       if (squares[i][j] === null) {
-        for (let k = 0; k < 8; k++) {
+        for (let k = 0; k < dim; k++) {
           l = 1
           while (true) {
             ni = i + l * di[k];
@@ -78,7 +79,7 @@ function reverse(i: number, j: number, nowplayer: string, nextSquares: string[][
   let ni;
   let nj;
   let l;
-  for (let k = 0; k < 8; k++) {
+  for (let k = 0; k < dim; k++) {
     l = 1
     while (true) {
       ni = i + l * di[k];
