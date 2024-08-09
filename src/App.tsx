@@ -2,18 +2,28 @@ import { useState } from 'react';
 import './App.css';
 
 
-const dim = 8 //升目の次元
+const dim = 8 // 升目の次元
 const color = ["Black", "White"]
-const generateInitialGrid = () => { //初期状態
+
+/**
+ * 初期状態の碁盤を生成する関数
+ */
+function generateInitialGrid() {
   const initial: string[][] = Array.from({ length: dim }, () => Array(dim).fill(null));
-  initial[3][3] = "White";
-  initial[3][4] = "Black";
-  initial[4][3] = "Black";
-  initial[4][4] = "White";
+  const hdim = Math.floor(dim / 2);
+  initial[hdim - 1][hdim - 1] = "White";
+  initial[hdim - 1][hdim - 0] = "Black";
+  initial[hdim - 0][hdim - 1] = "Black";
+  initial[hdim - 0][hdim - 0] = "White";
   return initial;
 }
 
-function Square({ value, onSquareClick }: { value: string, onSquareClick: () => void }) { //各升目の状態
+/**
+ * 各碁盤の目を表示するコンポーネント
+ */
+function Square(
+  { value, onSquareClick }: { value: string, onSquareClick: () => void }
+) {
   return (
     <button className="square" onClick={onSquareClick}>
       {value && <div className={`disc ${value}`}></div>}
@@ -21,7 +31,11 @@ function Square({ value, onSquareClick }: { value: string, onSquareClick: () => 
   );
 }
 
-function possible_area(nowplayer: string, squares: string[][]) { //配置可能場所をそれぞれの場合に対して計算
+/**
+ * `nowplayer` にとって碁盤の状態 `squares` に
+ * 配置可能な碁盤の目があるかどうかを判定する関数
+ */
+function possible_area(nowplayer: string, squares: string[][]) {
   const di = [1, 0, 1, 1, -1, 0, -1, -1];
   const dj = [0, 1, 1, -1, 0, -1, -1, 1];
   let ni;
@@ -29,8 +43,9 @@ function possible_area(nowplayer: string, squares: string[][]) { //配置可能�
   let l;
   for (let i = 0; i < dim; i++) {
     for (let j = 0; j < dim; j++) {
-      if (squares[i][j] === null) { //石が置かれていないすべての升目に対して配置可能場所を計算
-        for (let k = 0; k < 8; k++) {
+      // 石が置かれていないすべての升目に対して配置可能場所を計算
+      if (squares[i][j] === null) {
+        for (let k = 0; k < dim; k++) {
           l = 1
           while (true) {
             ni = i + l * di[k];
@@ -53,16 +68,18 @@ function possible_area(nowplayer: string, squares: string[][]) { //配置可能�
   return false;
 }
 
+/**
+ * `nowplayer` が (`i`, `j`) に置いた時に石をひっくり返す処理をする関数．
+ * ひっくり返す場所がない場合 `false` を返す．
+ */
 function reverse(i: number, j: number, nowplayer: string, nextSquares: string[][]) {
-  //nowplayerが(i,j)に置いた時にひっくり返す石の場所を計算
-  //ひっくり返す場所がなければfalseを返してそこには置けないようにする
   let reverseornot = false;
   const di = [1, 0, 1, 1, -1, 0, -1, -1];
   const dj = [0, 1, 1, -1, 0, -1, -1, 1];
   let ni;
   let nj;
   let l;
-  for (let k = 0; k < 8; k++) {
+  for (let k = 0; k < dim; k++) {
     l = 1
     while (true) {
       ni = i + l * di[k];
@@ -85,6 +102,9 @@ function reverse(i: number, j: number, nowplayer: string, nextSquares: string[][
   return reverseornot;
 }
 
+/**
+ * 碁盤の状態 `squares` から勝者を判定し，戻り値として返す関数．
+ */
 function gameEnd(squares: string[][]) {
   // 石のカウント
   let flat = squares.flat()
@@ -104,8 +124,11 @@ function gameEnd(squares: string[][]) {
 }
 
 
+/**
+ * 碁盤を表示するコンポーネント
+ */
 function Board() {
-  //升目の状態
+  // 升目の状態
   const [xIsNext, setXIsNext] = useState(0);
   const [squares, setSquares] = useState(generateInitialGrid());
   const [prevSquares, setPrevSquares] = useState<string[][] | null>(null);
@@ -156,7 +179,7 @@ function Board() {
   if (game === null) {
     status = "Next player: " + nowplayer;
     if (!possible_area(nowplayer, squares)) {
-      //置き場所がなくなった時の処理
+      // 置き場所がなくなった時の処理
       if (!possible_area(color[1 - xIsNext], squares)) {
         word = gameEnd(squares);
         status = "Game is over!";
@@ -197,7 +220,10 @@ function Board() {
   );
 }
 
-const App = () => {
+/**
+ * メインとなるアプリコンポーネント
+ */
+function App() {
   return (
     <div className="App">
       <Board />
