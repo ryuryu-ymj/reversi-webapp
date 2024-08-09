@@ -1,5 +1,7 @@
 # オセロゲームを作ろう!!!
 
+<https://ryuryu-ymj.github.io/reversi-webapp/>
+
 ## セットアップ
 1. リポジトリをクローンしてくる
 ```
