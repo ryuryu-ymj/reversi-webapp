@@ -197,7 +197,7 @@ function Board() {
   }
 
   return (
-    <div>
+    <div className="game-wrapper">
       <div className="nextplayer" key="status">{status}</div>
       <div className="status" key="word">{word}</div>
       {
@@ -214,8 +214,10 @@ function Board() {
         }())
       }
       {/* <button onClick={resetBoard}>Reset Board</button> */}
-      <button onClick={resetBoard}>Reset Board</button>
-      <button onClick={doOver}>Do Over</button>
+      <div className="button-container">
+        <button className="resetBoard" onClick={resetBoard}>Reset Board</button>
+        <button className="doOver" onClick={doOver}>Do Over</button>
+      </div>
     </div>
   );
 }
