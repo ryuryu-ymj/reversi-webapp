@@ -128,15 +128,13 @@ function gameEnd(squares: string[][]) {
  * 碁盤を表示するコンポーネント
  */
 function Board() {
-  // 升目の状態
   const [xIsNext, setXIsNext] = useState(0);
+  const [history, setHistory] = useState([generateInitialGrid()]);
   const [squares, setSquares] = useState(generateInitialGrid());
-  const [prevSquares, setPrevSquares] = useState<string[][] | null>(null);
   const [game, setGame] = useState(null);
-  const [back, setBack] = useState(true);
   let status;
   let word;
-  let nowplayer = color[xIsNext]
+  let nowplayer = color[xIsNext];
 
   function copy2DArray<T>(array: T[][]) {
     return array.map(row => [...row]);
@@ -146,12 +144,10 @@ function Board() {
     if (squares[i][j] || game != null) {
       return;
     } else {
-      setBack(true);
       const nextSquares = copy2DArray(squares);
-      const tmpSquares = copy2DArray(squares);
       const reverseornot = reverse(i, j, nowplayer, nextSquares);
       if (reverseornot) {
-        setPrevSquares(tmpSquares);
+        setHistory([...history, nextSquares]);
         nextSquares[i][j] = nowplayer;
         setSquares(nextSquares);
         setXIsNext(1 - xIsNext);
@@ -160,19 +156,20 @@ function Board() {
   }
 
   const doOver = () => {
-    if (back && prevSquares != null) {
-      setSquares(prevSquares);
+    if (history.length > 1) {
+      // setSquares(prevSquares);
+      history.pop();
+      console.log(history);
+      setSquares(history[history.length - 1])
       setXIsNext(1 - xIsNext);
       setGame(null);
-      setPrevSquares(null);
-      setBack(false);
     }
   }
 
   const resetBoard = () => {
     setXIsNext(0);
     setSquares(generateInitialGrid());
-    setPrevSquares(null);
+    setHistory([generateInitialGrid()]);
     setGame(null);
   }
 
@@ -201,7 +198,7 @@ function Board() {
       <div className="nextplayer" key="status">{status}</div>
       <div className="status" key="word">{word}</div>
       {
-        (function() {
+        (function () {
           const grid = [];
           for (let i = 0; i < dim; i++) {
             const row = [];
@@ -210,7 +207,7 @@ function Board() {
             }
             grid.push(<div className='board-row'>{row}</div>);
           }
-          return <div className="status">{grid}</div>;
+          return <div className="board">{grid}</div>;
         }())
       }
       {/* <button onClick={resetBoard}>Reset Board</button> */}

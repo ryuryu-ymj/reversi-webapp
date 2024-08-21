@@ -1,4 +1,5 @@
 html, body {
+  background-color: rgb(230, 249, 255);
   height: 100%;
   width: 100%;
   margin: 0;
@@ -25,6 +26,11 @@ html, body {
 }
 
 .nextplayer {
+  border: 3px solid white; 
+  display: inline-block; 
+  background-color: rgb(193, 240, 255);
+  padding: 5px;  
+  border-radius: 10px;
   color: hsl(0, 0%, 0%);
   font-size: min(5vh,5vw);
   text-align: center;
@@ -107,19 +113,19 @@ html, body {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 10px; 
+  padding: 5vh; 
   box-sizing: border-box;
   z-index: 2; 
 }
 
 .resetBoard, .doOver {
   position: relative;
-  width: 10vh; 
-  height: 10vh; 
+  width: min(10vh,10vw); 
+  height: min(10vh,10vw); 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2.5vh; 
+  font-size: min(2.5vh,2.5vw); 
   background-color: hsl(204, 70%, 53%);
   color: white;
   border: none;
