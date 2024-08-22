@@ -212,8 +212,8 @@ function Board() {
       }
       {/* <button onClick={resetBoard}>Reset Board</button> */}
       <div className="button-container">
-        <button className="resetBoard" onClick={resetBoard}>Reset Board</button>
-        <button className="doOver" onClick={doOver}>Do Over</button>
+        <button className="doOver" onClick={doOver}>←</button>
+        <button className="resetBoard" onClick={resetBoard}>Reset</button>
       </div>
     </div>
   );

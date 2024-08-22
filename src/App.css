@@ -76,6 +76,10 @@ html, body {
   border-radius: 0;
 }
 
+.square:hover{
+  border: 2.5px solid #000000;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 10vh;
@@ -125,7 +129,6 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: min(2.5vh,2.5vw); 
   background-color: hsl(204, 70%, 53%);
   color: white;
   border: none;
@@ -133,9 +136,21 @@ html, body {
 }
 
 .resetBoard {
-  transform: translateX(max(-30vw,-30vh)); 
+  font-size: min(3vh,3vw); 
+  transform: translateX(min(30vw,30vh));
 }
 
 .doOver {
+  font-size: min(4vh,4vw); 
+  transform: translateX(max(-30vw,-30vh)); 
+}
+
+.resetBoard:hover {
+  background-color: #e53935; /* ホバー時の背景色 */
   transform: translateX(min(30vw,30vh));
+}
+
+.doOver:hover {
+  background-color: #e53935; /* ホバー時の背景色 */
+  transform: translateX(max(-30vw,-30vh));
 }
