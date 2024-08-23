@@ -131,7 +131,7 @@ function Board() {
   const [xIsNext, setXIsNext] = useState(0);
   const [history, setHistory] = useState([generateInitialGrid()]);
   const [squares, setSquares] = useState(generateInitialGrid());
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState("ongame");
   let status;
   let word;
   let nowplayer = color[xIsNext];
@@ -141,7 +141,7 @@ function Board() {
   };
 
   function handleClick(i: number, j: number) {
-    if (squares[i][j] || game != null) {
+    if (squares[i][j] || game != "ongame") {
       return;
     } else {
       const nextSquares = copy2DArray(squares);
@@ -155,6 +155,21 @@ function Board() {
     }
   }
 
+  // function gameStatus(game: string, player: string) {
+  //   if (game === "ongame") {
+  //     return (
+  //       <div className="nextplayer">
+  //         <span>Next player:</span>
+  //         <div className={`disc ${player}`}></div>
+  //       </div>
+  //     );
+  //   }
+  //   else {
+  //     return <div className="nextplayer">Game is Over!</div>
+  //   }
+  // }
+
+
   const doOver = () => {
     if (history.length > 1) {
       // setSquares(prevSquares);
@@ -162,7 +177,7 @@ function Board() {
       console.log(history);
       setSquares(history[history.length - 1])
       setXIsNext(1 - xIsNext);
-      setGame(null);
+      setGame("ongame");
     }
   }
 
@@ -170,16 +185,16 @@ function Board() {
     setXIsNext(0);
     setSquares(generateInitialGrid());
     setHistory([generateInitialGrid()]);
-    setGame(null);
+    setGame("ongame");
   }
 
-  if (game === null) {
+  if (game === "ongame") {
     status = "Next player: " + nowplayer;
     if (!possible_area(nowplayer, squares)) {
       // 置き場所がなくなった時の処理
       if (!possible_area(color[1 - xIsNext], squares)) {
         word = gameEnd(squares);
-        status = "Game is over!";
+        status = "Game is over!"
       }
       else {
         word = "You can't place a piece anywhere!";
@@ -195,7 +210,10 @@ function Board() {
 
   return (
     <div className="game-wrapper">
-      <div className="nextplayer" key="status">{status}</div>
+      <div className="nextplayer">
+        <span>Next player:</span>
+        <div className={`disc ${nowplayer}`}></div>
+      </div>
       <div className="status" key="word">{word}</div>
       {
         (function () {
