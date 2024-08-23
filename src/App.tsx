@@ -132,7 +132,6 @@ function Board() {
   const [history, setHistory] = useState([generateInitialGrid()]);
   const [squares, setSquares] = useState(generateInitialGrid());
   const [game, setGame] = useState("ongame");
-  let status;
   let word;
   let nowplayer = color[xIsNext];
 
@@ -194,7 +193,6 @@ function Board() {
       // 置き場所がなくなった時の処理
       if (!possible_area(color[1 - xIsNext], squares)) {
         word = gameEnd(squares);
-        status = "Game is over!"
       }
       else {
         word = "You can't place a piece anywhere!";
