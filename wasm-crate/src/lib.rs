@@ -13,7 +13,7 @@ pub fn agent_policy(board_dim: usize, board_state: Vec<i32>) -> Vec<i32> {
             row.into_iter()
                 .map(|i| match i {
                     1 => Some(Player::Agent),
-                    -1 => Some(Player::Oponent),
+                    -1 => Some(Player::Opponent),
                     _ => None,
                 })
                 .collect()

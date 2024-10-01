@@ -39,7 +39,7 @@ git commit -m "<コミットメッセージ>"
 5. 変更内容をリモートにプッシュ
 
 ```
-git push -u orign <ブランチ名>
+git push -u origin <ブランチ名>
 ```
 
 6. [Githubのプロジェクトページ](https://github.com/ryuryu-ymj/reversi-webapp) でプルリクエストを立てる

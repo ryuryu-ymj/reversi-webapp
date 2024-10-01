@@ -65,7 +65,7 @@ function Square(
 function hasPlacableSquares(player: DiscType, board: SquareState[][]) {
   for (let i = 0; i < BOARD_DIM; i++) {
     for (let j = 0; j < BOARD_DIM; j++) {
-      if (revercedDiscs(i, j, player, board).length > 0) {
+      if (reversedDiscs(i, j, player, board).length > 0) {
         // 1つでも置ける場所があればtrueを返す.
         return true;
       }
@@ -79,7 +79,7 @@ function hasPlacableSquares(player: DiscType, board: SquareState[][]) {
  *
  * (`i`, `j`) に石が既にある場合は空配列を返す.
  */
-function revercedDiscs(
+function reversedDiscs(
   i: number,
   j: number,
   player: DiscType,
@@ -169,7 +169,7 @@ function Board() {
     if (!isOnGame || board[i][j] !== "None") {
       return;
     } else {
-      const revDiscs = revercedDiscs(i, j, player, board);
+      const revDiscs = reversedDiscs(i, j, player, board);
       if (revDiscs.length > 0) {
         setHistory([...history, board]);
         const newBoard = copy2DArray(board);
@@ -240,14 +240,13 @@ function Board() {
           }),
         );
 
-
         const wasm_task = async () => {
           const [i, j] = wasm.agent_policy(BOARD_DIM, board_parsed);
           console.log(i, j);
 
           if (!unmounted) {
             if (i !== -1 && j !== -1) {
-              const revDiscs = revercedDiscs(i, j, player, board);
+              const revDiscs = reversedDiscs(i, j, player, board);
               if (revDiscs.length > 0) {
                 const newBoard = copy2DArray(board);
                 for (const [ri, rj] of revDiscs) {
@@ -257,7 +256,7 @@ function Board() {
                 setBoard(newBoard);
                 setPlayer(nextPlayer());
               } else {
-                console.error("Error: Invalid cpu action.")
+                console.error("Error: Invalid cpu action.");
                 setPlayer(nextPlayer());
               }
             } else {
@@ -268,7 +267,7 @@ function Board() {
               }
             }
           }
-        }
+        };
         setTimeout(wasm_task);
       }
     }
@@ -276,8 +275,7 @@ function Board() {
     return () => {
       unmounted = true;
     };
-  }, [board, player, isOnGame])
-
+  }, [board, player, isOnGame]);
 
   return (
     <div className="game-wrapper">
