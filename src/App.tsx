@@ -202,63 +202,82 @@ function Board() {
     setIsOnGame(true);
   };
 
-  let statusLine;
+  let statusLine: string;
   if (isOnGame) {
     if (player === DISC_TYPE_HUMAN) {
       statusLine = "Place your piece!";
-
-      if (!hasPlacableSquares(player, board)) {
-        // 置き場所がなくなった時の処理
-        if (!hasPlacableSquares(nextPlayer(), board)) {
-          setIsOnGame(false);
-        } else {
-          statusLine = "You can't place a piece anywhere!";
-          setTimeout(() => {
-            setPlayer(nextPlayer());
-          }, 300);
-        }
-      }
     } else {
       statusLine = "CPU is thinking...";
-      const board_parsed = Int32Array.from(
-        board.flat().map((e) => {
-          switch (e) {
-            case DISC_TYPE_CPU:
-              return 1;
-            case DISC_TYPE_HUMAN:
-              return -1;
-            default:
-              return 0;
-          }
-        }),
-      );
-      const [i, j] = wasm.agent_policy(BOARD_DIM, board_parsed);
-      if (i !== -1 && j !== -1) {
-        setTimeout(() => {
-          const revDiscs = revercedDiscs(i, j, player, board);
-          if (revDiscs.length > 0) {
-            const newBoard = copy2DArray(board);
-            for (const [ri, rj] of revDiscs) {
-              newBoard[ri][rj] = player;
-            }
-            newBoard[i][j] = player;
-            setBoard(newBoard);
-            setPlayer(nextPlayer());
-          }
-        }, 300);
-      } else {
-        if (!hasPlacableSquares(nextPlayer(), board)) {
-          setIsOnGame(false);
-        } else {
-          setTimeout(() => {
-            setPlayer(nextPlayer());
-          }, 300);
-        }
-      }
     }
   } else {
     statusLine = checkWinner(board);
   }
+
+  useEffect(() => {
+    let unmounted = false;
+
+    if (isOnGame) {
+      if (player === DISC_TYPE_HUMAN) {
+        if (!hasPlacableSquares(player, board)) {
+          // 置き場所がなくなった時の処理
+          if (!hasPlacableSquares(nextPlayer(), board)) {
+            setIsOnGame(false);
+          } else {
+            statusLine = "You can't place a piece anywhere!";
+            setTimeout(() => {
+              if (!unmounted) {
+                setPlayer(nextPlayer());
+              }
+            }, 300);
+          }
+        }
+      } else {
+        const board_parsed = Int32Array.from(
+          board.flat().map((e) => {
+            switch (e) {
+              case DISC_TYPE_CPU:
+                return 1;
+              case DISC_TYPE_HUMAN:
+                return -1;
+              default:
+                return 0;
+            }
+          }),
+        );
+
+
+        const wasm_task = async () => {
+          const [i, j] = wasm.agent_policy(BOARD_DIM, board_parsed);
+          console.log(i, j);
+
+          if (!unmounted) {
+            if (i !== -1 && j !== -1) {
+              const revDiscs = revercedDiscs(i, j, player, board);
+              if (revDiscs.length > 0) {
+                const newBoard = copy2DArray(board);
+                for (const [ri, rj] of revDiscs) {
+                  newBoard[ri][rj] = player;
+                }
+                newBoard[i][j] = player;
+                setBoard(newBoard);
+                setPlayer(nextPlayer());
+              }
+            } else {
+              if (!hasPlacableSquares(nextPlayer(), board)) {
+                setIsOnGame(false);
+              } else {
+                setPlayer(nextPlayer());
+              }
+            }
+          }
+        }
+        wasm_task();
+      }
+    }
+
+    return () => { unmounted = true; };
+  }, [board, player, isOnGame])
+
 
   return (
     <div className="game-wrapper">
