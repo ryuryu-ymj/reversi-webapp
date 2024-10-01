@@ -223,12 +223,7 @@ function Board() {
           if (!hasPlacableSquares(nextPlayer(), board)) {
             setIsOnGame(false);
           } else {
-            statusLine = "You can't place a piece anywhere!";
-            setTimeout(() => {
-              if (!unmounted) {
-                setPlayer(nextPlayer());
-              }
-            }, 300);
+            setPlayer(nextPlayer());
           }
         }
       } else {
@@ -261,6 +256,9 @@ function Board() {
                 newBoard[i][j] = player;
                 setBoard(newBoard);
                 setPlayer(nextPlayer());
+              } else {
+                console.error("Error: Invalid cpu action.")
+                setPlayer(nextPlayer());
               }
             } else {
               if (!hasPlacableSquares(nextPlayer(), board)) {
@@ -271,11 +269,13 @@ function Board() {
             }
           }
         }
-        wasm_task();
+        setTimeout(wasm_task);
       }
     }
 
-    return () => { unmounted = true; };
+    return () => {
+      unmounted = true;
+    };
   }, [board, player, isOnGame])
 
 

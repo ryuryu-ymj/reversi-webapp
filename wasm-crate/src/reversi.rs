@@ -1,7 +1,4 @@
-use std::{
-    fmt::{Debug, Pointer},
-    ops::Not,
-};
+use std::ops::Not;
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum Player {
