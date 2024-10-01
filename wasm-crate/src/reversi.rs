@@ -1,4 +1,7 @@
-use std::{ops::Neg, usize};
+use std::{
+    fmt::{Debug, Pointer},
+    ops::Not,
+};
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum Player {
@@ -6,10 +9,10 @@ pub enum Player {
     Oponent,
 }
 
-impl Neg for Player {
+impl Not for Player {
     type Output = Player;
 
-    fn neg(self) -> Self::Output {
+    fn not(self) -> Self::Output {
         match &self {
             Player::Agent => Player::Oponent,
             Player::Oponent => Player::Agent,
@@ -18,10 +21,14 @@ impl Neg for Player {
 }
 
 pub type Board = Vec<Vec<Option<Player>>>;
-pub type State = (Board, Player);
+#[derive(Debug)]
+pub struct State {
+    pub board: Board,
+    pub next_player: Player,
+}
 pub type Action = (usize, usize);
 
-fn checked_move(start: usize, len: usize, step: i8) -> Option<usize> {
+fn usize_checked_step(start: usize, len: usize, step: i8) -> Option<usize> {
     if step > 0 {
         Some(start + len * (step as usize))
     } else if step < 0 {
@@ -32,9 +39,7 @@ fn checked_move(start: usize, len: usize, step: i8) -> Option<usize> {
 }
 
 pub fn reversed_discs(state: &State, action: &Action) -> Vec<Action> {
-    let (board, player) = state;
-
-    if board[action.0][action.1] != None {
+    if state.board[action.0][action.1] != None {
         return vec![];
     }
 
@@ -52,20 +57,20 @@ pub fn reversed_discs(state: &State, action: &Action) -> Vec<Action> {
     ];
     for (di, dj) in dij {
         for len in 1..usize::MAX {
-            let Some(i) = checked_move(action.0, len, di) else {
+            let Some(i) = usize_checked_step(action.0, len, di) else {
                 break;
             };
-            let Some(j) = checked_move(action.1, len, dj) else {
+            let Some(j) = usize_checked_step(action.1, len, dj) else {
                 break;
             };
-            match &board.get(i).map(|e| e.get(j)) {
-                &Some(Some(Some(p))) if p != player => continue,
-                &Some(Some(Some(p))) if p == player => {
+            match &state.board.get(i).map(|e| e.get(j)) {
+                &Some(Some(Some(p))) if p != &state.next_player => continue,
+                &Some(Some(Some(p))) if p == &state.next_player => {
                     if len > 1 {
                         ret.extend((1..len).map(|l| {
                             (
-                                checked_move(action.0, l, di).unwrap(),
-                                checked_move(action.1, l, dj).unwrap(),
+                                usize_checked_step(action.0, l, di).unwrap(),
+                                usize_checked_step(action.1, l, dj).unwrap(),
                             )
                         }));
                     }
@@ -79,17 +84,17 @@ pub fn reversed_discs(state: &State, action: &Action) -> Vec<Action> {
 }
 
 pub fn all_actions(state: &State) -> Vec<Action> {
-    let (board, _) = state;
-    board
+    state
+        .board
         .iter()
         .enumerate()
         .flat_map(|(i, row)| (0..row.len()).map(move |j| (i, j)))
         .collect()
 }
 
-pub fn possible_actions(state: &State) -> Vec<Action> {
-    let (board, _) = state;
-    board
+pub fn legal_actions(state: &State) -> Vec<Action> {
+    state
+        .board
         .iter()
         .enumerate()
         .flat_map(|(i, row)| {
@@ -103,6 +108,20 @@ pub fn possible_actions(state: &State) -> Vec<Action> {
             })
         })
         .collect()
+}
+
+pub fn next_state(state: &State, action: Option<&Action>) -> State {
+    let mut next_board = state.board.clone();
+    if let Some(action) = action {
+        for (i, j) in reversed_discs(state, action) {
+            next_board[i][j] = Some(state.next_player);
+        }
+        next_board[action.0][action.1] = Some(state.next_player);
+    }
+    State {
+        board: next_board,
+        next_player: !state.next_player,
+    }
 }
 
 #[cfg(test)]
@@ -125,7 +144,7 @@ mod tests {
 
     #[test]
     fn test_reversed_discs() {
-        let tests = [
+        let test_set = [
             (
                 vec![
                     vec![00, 00, -1, 01],
@@ -158,9 +177,12 @@ mod tests {
             ),
         ];
 
-        for (board, action, mut expected) in tests {
-            let board = parse_board(board);
-            let mut result = reversed_discs(&(board, Player::Agent), &action);
+        for (board, action, mut expected) in test_set {
+            let state = State {
+                board: parse_board(board),
+                next_player: Player::Agent,
+            };
+            let mut result = reversed_discs(&state, &action);
             result.sort();
             expected.sort();
             assert_eq!(result, expected);
@@ -168,8 +190,8 @@ mod tests {
     }
 
     #[test]
-    fn test_possible_actions() {
-        let tests = [
+    fn test_legal_actions() {
+        let test_set = [
             (
                 vec![
                     vec![00, 00, 00, 00],
@@ -190,9 +212,12 @@ mod tests {
             ),
         ];
 
-        for (board, mut expected) in tests {
-            let board = parse_board(board);
-            let mut result = possible_actions(&(board, Player::Agent));
+        for (board, mut expected) in test_set {
+            let state = State {
+                board: parse_board(board),
+                next_player: Player::Agent,
+            };
+            let mut result = legal_actions(&state);
             result.sort();
             expected.sort();
             assert_eq!(result, expected);

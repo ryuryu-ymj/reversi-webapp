@@ -19,8 +19,11 @@ pub fn agent_policy(board_dim: usize, board_state: Vec<i32>) -> Vec<i32> {
                 .collect()
         })
         .collect();
-    let state = (board, Player::Agent);
-    let action = greedy::policy(&state);
+    let state = reversi::State {
+        board,
+        next_player: Player::Agent,
+    };
+    let action = minimax::policy(&state);
     match action {
         Some((i, j)) => vec![i as i32, j as i32],
         None => vec![-1, -1],
