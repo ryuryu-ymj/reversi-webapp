@@ -12,12 +12,12 @@ fn utility(board: &Board) -> Utility {
         .flatten()
         .filter(|s| s == &&Some(Player::Agent))
         .count() as i32;
-    let count_oponent = board
+    let count_opponent = board
         .iter()
         .flatten()
-        .filter(|s| s == &&Some(Player::Oponent))
+        .filter(|s| s == &&Some(Player::Opponent))
         .count() as i32;
-    let utility = count_agent - count_oponent;
+    let utility = count_agent - count_opponent;
     return utility;
 }
 
@@ -62,7 +62,7 @@ mod tests {
                 row.iter()
                     .map(|i| match i {
                         1 => Some(Player::Agent),
-                        -1 => Some(Player::Oponent),
+                        -1 => Some(Player::Opponent),
                         _ => None,
                     })
                     .collect()
@@ -76,7 +76,7 @@ mod tests {
             for s in row {
                 match s {
                     Some(Player::Agent) => eprint!("o"),
-                    Some(Player::Oponent) => eprint!("x"),
+                    Some(Player::Opponent) => eprint!("x"),
                     None => eprint!("_"),
                 }
             }

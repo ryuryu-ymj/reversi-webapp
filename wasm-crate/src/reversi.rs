@@ -3,7 +3,7 @@ use std::ops::Not;
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum Player {
     Agent,
-    Oponent,
+    Opponent,
 }
 
 impl Not for Player {
@@ -11,8 +11,8 @@ impl Not for Player {
 
     fn not(self) -> Self::Output {
         match &self {
-            Player::Agent => Player::Oponent,
-            Player::Oponent => Player::Agent,
+            Player::Agent => Player::Opponent,
+            Player::Opponent => Player::Agent,
         }
     }
 }
@@ -131,7 +131,7 @@ mod tests {
                 row.iter()
                     .map(|i| match i {
                         1 => Some(Player::Agent),
-                        -1 => Some(Player::Oponent),
+                        -1 => Some(Player::Opponent),
                         _ => None,
                     })
                     .collect()
