@@ -143,6 +143,7 @@ export function useGameState(): [
   const [isOnGame, setIsOnGame] = useState(true);
   const [history, setHistory] = useState<SquareType[][][]>([]);
 
+  /** wasmを別スレッドで実行するためのWeb Worker */
   const wasmWorkerRef = useRef<Worker | null>(null);
   useEffect(() => {
     wasmWorkerRef.current = new WasmWorker();
@@ -195,6 +196,9 @@ export function useGameState(): [
   }
 
   const rollbackBoard = () => {
+    wasmWorkerRef.current?.terminate();
+    wasmWorkerRef.current = new WasmWorker();
+
     if (history.length > 0) {
       const prevBoard = history[history.length - 1];
       setBoard(prevBoard);
@@ -205,6 +209,9 @@ export function useGameState(): [
   };
 
   const resetBoard = () => {
+    wasmWorkerRef.current?.terminate();
+    wasmWorkerRef.current = new WasmWorker();
+
     setBoard(generateInitialBoard());
     setPlayer(DISC_TYPE_HUMAN);
     setHistory([]);
