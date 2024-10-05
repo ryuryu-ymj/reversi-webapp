@@ -128,13 +128,22 @@ function generateNextBoard(
  */
 export function useGameState(): [
   {
+    /** 次の手を打つプレイヤー */
     player: DiscType;
+    /** 碁盤の状態 */
     board: SquareType[][];
+    /** ゲームが進行中か否か */
     isOnGame: boolean;
   },
   {
+    /**
+     * (`i`, `j`) にユーザーの石を置く.
+     * スキップやCPUの行動は自動で行われる.
+     */
     placeUserDisc: (i: number, j: number) => void;
+    /** 碁盤の状態をユーザーが前回, 石を置いた直前の状態に戻す. */
     rollbackBoard: () => void;
+    /** 碁盤の状態を初期状態に戻す. */
     resetBoard: () => void;
   },
 ] {
