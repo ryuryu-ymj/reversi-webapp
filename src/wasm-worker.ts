@@ -18,6 +18,5 @@ onmessage = (event: MessageEvent<[number, DiscType[][]]>) => {
     }),
   );
   const [i, j] = wasm.agent_policy(boardDim, boardParsed);
-  console.log(board);
   postMessage([i, j]);
 };

@@ -43,7 +43,7 @@ function Board(
   },
 ) {
   const grid = value.map((row, i) => {
-    let rowMaped = row.map((cell, j) => (
+    const rowJSX = row.map((cell, j) => (
       <Square
         value={cell}
         onSquareClick={() => {
@@ -53,7 +53,7 @@ function Board(
       />
     ));
 
-    return <div className="board-row" key={i}>{rowMaped}</div>;
+    return <div className="board-row" key={i}>{rowJSX}</div>;
   });
 
   return <div className="board">{grid}</div>;
