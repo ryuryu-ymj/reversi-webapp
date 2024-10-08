@@ -14,6 +14,9 @@ export const DISC_TYPE_CPU: DiscType = "White";
 /** Humanプレイヤーの`DiscType`. */
 export const DISC_TYPE_HUMAN: DiscType = "Black";
 
+/** CPUプレイヤーが次の手を打つまでの時間の最小値. */
+const CPU_MIN_DELAY = 600;
+
 /**
  * 初期状態の中央に４つの石が並べられた碁盤を生成する関数.
  *
@@ -186,13 +189,24 @@ export function useGameState(): [
       }
 
       if (nextPlayer === DISC_TYPE_CPU && wasmWorkerRef.current) {
+        const date1 = new Date();
         wasmWorkerRef.current.postMessage([BOARD_DIM, nextBoard]);
         wasmWorkerRef.current.onmessage = (
           event: MessageEvent<[number, number]>,
         ) => {
+          const date2 = new Date();
+          const dur = date2.getTime() - date1.getTime();
+          const rest = CPU_MIN_DELAY - dur;
+
           const [i, j] = event.data;
           console.log(i, j);
-          placeDisc(nextBoard, DISC_TYPE_CPU, i, j);
+          if (rest > 0) {
+            setTimeout(() => {
+              placeDisc(nextBoard, DISC_TYPE_CPU, i, j);
+            }, rest);
+          } else {
+            placeDisc(nextBoard, DISC_TYPE_CPU, i, j);
+          }
         };
       }
     }
