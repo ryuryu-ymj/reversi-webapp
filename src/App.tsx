@@ -1,5 +1,5 @@
 import "./App.css";
-import { Board } from "./Board";
+import { Board, Disc } from "./Board";
 import { countDiscs, DISC_TYPE_HUMAN, useGameState } from "./game-logic";
 
 /**
@@ -29,6 +29,10 @@ function GameScreen() {
 
   return (
     <div className="game-wrapper">
+      <div className="nextplayer">
+        <span>Next player:</span>
+        <Disc value={gameState.player} />
+      </div>
       <div className="status">{statusLine}</div>
       <Board value={gameState.board} onSquareClick={placeUserDisc} />
       <div className="button-container">

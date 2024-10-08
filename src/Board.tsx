@@ -7,11 +7,11 @@ import { BOARD_DIM, DiscType, SquareType } from "./game-logic";
 /**
  * 碁盤の上に置く石を描画するコンポーネント.
  */
-function Disc(
+export function Disc(
   { value, onAnimationStart, onAnimationComplete }: {
     value: DiscType;
-    onAnimationStart: () => void;
-    onAnimationComplete: () => void;
+    onAnimationStart?: () => void;
+    onAnimationComplete?: () => void;
   },
 ) {
   return (
