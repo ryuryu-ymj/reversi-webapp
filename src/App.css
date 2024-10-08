@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   background-color: rgb(230, 249, 255);
   height: 100%;
   width: 100%;
@@ -37,7 +38,8 @@ html, body {
 }
 
 .nextplayer span {
-  margin-right: 10px; /* 文字と石の間に空白を追加 */
+  margin-right: 10px;
+  /* 文字と石の間に空白を追加 */
 }
 
 .status {
@@ -101,17 +103,27 @@ html, body {
 .disc {
   width: min(8vw, 8vh);
   height: min(8vw, 8vh);
-  border-radius: 50%;
-}
+  transform-style: preserve-3d;
 
-.Black {
-  background-color: black;
-  border: 1px solid black;
-}
+  .face-black,
+  .face-white {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid black;
+    backface-visibility: hidden;
+  }
 
-.White {
-  background-color: white;
-  border: 1px solid black;
+  .face-black {
+    background-color: black;
+    transform: rotateY(0deg);
+  }
+
+  .face-white {
+    background-color: white;
+    transform: rotateY(-180deg);
+  }
 }
 
 /* ボタンのデザイン */
@@ -127,7 +139,8 @@ html, body {
   z-index: 2;
 }
 
-.resetBoard, .rollbackBoard {
+.resetBoard,
+.rollbackBoard {
   position: inline-block;
   width: min(10vh, 10vw);
   height: min(10vh, 10vw);
@@ -151,11 +164,13 @@ html, body {
 }
 
 .resetBoard:hover {
-  background-color: #e53935; /* ホバー時の背景色 */
+  background-color: #e53935;
+  /* ホバー時の背景色 */
   transform: translateX(min(30vw, 30vh));
 }
 
 .rollbackBoard:hover {
-  background-color: #e53935; /* ホバー時の背景色 */
+  background-color: #e53935;
+  /* ホバー時の背景色 */
   transform: translateX(max(-30vw, -30vh));
 }
