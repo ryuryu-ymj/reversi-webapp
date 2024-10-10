@@ -1,6 +1,7 @@
 import "./App.css";
 import { Board, Disc } from "./Board";
 import { countDiscs, DISC_TYPE_HUMAN, useGameState } from "./game-logic";
+import { IconButton } from "./IconButton";
 
 /**
  * ゲーム画面を描画するコンポーネント.
@@ -28,17 +29,20 @@ function GameScreen() {
   }
 
   return (
-    <div className="game-wrapper">
-      <div className="nextplayer">
-        <span>Next player:</span>
+    <div className="game-screen">
+      <div className="button-container">
+        <IconButton iconName="arrow_back" onClick={rollbackBoard} />
+        <IconButton iconName="restart_alt" onClick={resetBoard} />
+      </div>
+
+      <div className="next-player">
+        <span>Next:</span>
         <Disc value={gameState.player} />
       </div>
-      <div className="status">{statusLine}</div>
+
+      <div className="status-line">{statusLine}</div>
+
       <Board value={gameState.board} onSquareClick={placeUserDisc} />
-      <div className="button-container">
-        <button className="rollbackBoard" onClick={rollbackBoard}>←</button>
-        <button className="resetBoard" onClick={resetBoard}>Reset</button>
-      </div>
     </div>
   );
 }
